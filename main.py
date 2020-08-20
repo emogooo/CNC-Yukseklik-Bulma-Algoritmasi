@@ -79,10 +79,28 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri = 0.1):
         ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
         ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
+    if bulunacakX % kareKenarUzunlugu == 0:      #Bu kod oluşan mantıksal hatayı giderir
+        bulunacakX = 0
+    if bulunacakY % kareKenarUzunlugu == 0:      #Bu kod oluşan mantıksal hatayı giderir
+        bulunacakY = 0
+
+    """
+    
+    
+    Mantıksal hata:Eğer karelerin kenar uzunluğuna eşit bir değer girerseniz, örneğin (5,0) bu bilgisayarda istenilen konumu vermiyor,
+    fakat verdiği konum yanlış değil. Nasıl yani? Şöyle açıklayayım: (5,0) konumu, yatayda 1 ve dikeyde 1. karenin en sağ alt konumudur.
+    Aynı zamanda da yatayda 2 ve dikeyde 1. karenin de en sol alt konumudur. Yazdığım kodun doğru şekilde çalışması için yatayda 1 ve dikeyde 1
+    konumuna göre işlem yapması gerekiyor, fakat mod alma işlemi neticesinde yatayda 2 ve dikeyde 1 konumunu alıyor. Madem bilgisayar bu 
+    konum ile işlem yapmak istiyor, biz de değerleri buna uyarlarız.(5,0) yatayda 2 ve dikeyde 1. karenin en sol altı olacağı için 5 değerini 0 yaparız
+    ve mantıksal hata ortadan kalkmış olur.    
+    
+    
+    """
+
     while True:
         ortaNokta = (nokta1 + nokta2 + nokta3 + nokta4) / 4
         print(ortaNokta)
-        if abs(bulunacakX - ortaNoktaX) < hassasiyetDegeri and abs(bulunacakY - ortaNoktaY) < hassasiyetDegeri:
+        if abs(kareKonumX - ortaNoktaX) < hassasiyetDegeri and abs(kareKonumY - ortaNoktaY) < hassasiyetDegeri:
             return ortaNokta
 
         if kareKonumX < ortaNoktaX and kareKonumY < ortaNoktaY:  #Sol alt
