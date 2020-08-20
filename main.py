@@ -18,14 +18,18 @@ yukseklikHaritasi[0][1] = 3  # Deneme amaçlı verilen değerdir.
 yukseklikHaritasi[1][1] = 2  # Deneme amaçlı verilen değerdir.
 
 
-def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.1):
+def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.001):
     nokta1, nokta2, nokta3, nokta4 = 0, 0, 0, 0  # Sırasıyla 00,10,01,11 noktlarını temsil etmektedir.
+    by = bulunacakY
+    bx = bulunacakX
     bulunacakX *= girdiBasamakDegeri
     bulunacakY *= girdiBasamakDegeri
+    bulunacakX = float(bulunacakX)
+    bulunacakY = float(bulunacakY)
     kareX = int(bulunacakX / kareKenarUzunlugu)  # X düzlemindeki (kareX + 1)'inci kare
     kareY = int(bulunacakY / kareKenarUzunlugu)  # Y düzlemindeki (kareY + 1)' inci kare
-    bulunacakX = int(bulunacakX % kareKenarUzunlugu)  # Saptanan karenin içerisindeki X konumu
-    bulunacakY = int(bulunacakY % kareKenarUzunlugu)  # Saptanan karenin içerisindeki Y konumu
+    bulunacakX = float(bulunacakX % kareKenarUzunlugu)  # Saptanan karenin içerisindeki X konumu
+    bulunacakY = float(bulunacakY % kareKenarUzunlugu)  # Saptanan karenin içerisindeki Y konumu
     ortaNoktaUstDegerX = kareKenarUzunlugu
     ortaNoktaAltDegerX = 0
     ortaNoktaUstDegerY = kareKenarUzunlugu
@@ -39,6 +43,9 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.1):
             yukseklikHaritasi[kareX][kareY + 1] and yukseklikHaritasi[kareX][kareY + 1] == yukseklikHaritasi[kareX + 1][
         kareY + 1]:
         return ortaNokta  # 4 nokta eş ise tüm yüzey eştir.
+
+    if bulunacakX == ortaNoktaX and bulunacakY == ortaNoktaY: # Karenin ortası isteniliyorsa
+        return ortaNokta
 
     if bulunacakX < ortaNoktaX and bulunacakY < ortaNoktaY:  # Sol alt
         nokta1 = yukseklikHaritasi[kareX][kareY]
@@ -80,6 +87,12 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.1):
         ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
         ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
+    elif bulunacakX == ortaNoktaX:   #X ekseninin ortasındaysa
+        return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))),by,hassasiyetDegeri)
+
+    elif bulunacakY == ortaNoktaY:   #Y ekseninin ortasındaysa
+        return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))), hassasiyetDegeri)
+
     """ 
     
     if bulunacakX % kareKenarUzunlugu == 0:  # Bu kod oluşan mantıksal hatayı giderir
@@ -98,7 +111,7 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.1):
     """
     while True:
         ortaNokta = (nokta1 + nokta2 + nokta3 + nokta4) / 4
-        print(ortaNokta)
+        #print(ortaNokta)
         if abs(bulunacakX - ortaNoktaX) < hassasiyetDegeri and abs(bulunacakY - ortaNoktaY) < hassasiyetDegeri:
             return ortaNokta
 
@@ -138,10 +151,25 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.1):
             ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
             ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
+        elif bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
+            return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))), by, hassasiyetDegeri)
+
+        elif bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
+            return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))), hassasiyetDegeri)
+
 
 """
 3. parametre işlem hassaslığıdır.
-Default değeri : 0.1
+Default değeri : 0.001
 Bu sayıyı küçülterek daha net sonuçlar alabilirsiniz.
 """
-print("Verilen noktanın yüksekliği : " + str(yukseklikBul(1,4,0.0000000000001)))
+print("Verilen noktanın yüksekliği : " + str(yukseklikBul(1,4)))
+
+
+"""
+Bu kod ile mantıksal hata olup olmadığı kontrol edilebilir.
+
+for i in range(501):
+    for j in range(501):
+        print(str(i/100) + " - " + str(j/100) + "noktalarının yüksekliği: "+ str(yukseklikBul((i/100), (j/100))))
+"""
