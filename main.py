@@ -1,24 +1,16 @@
-girdiBasamakDegeri = 100
-"""
-10 üzeri n değerler giriniz.
-n, virgülden sonra kaç basamakta sayı verebileceğinizi belirtir.
-n ne kadar büyürse o kadar hassas işlem yapabilirsiniz.
-
-Örneğin: girdiBasamakDegeri = 100 için (1.56, 3.69) noktaları hesaplanabilir fakat (1.561, 3.696) noktaları hesaplanamaz
-"""
-
+girdiBasamakDegeri = 1000000000
 kareKenarUzunlugu = 5 * girdiBasamakDegeri  # 5 milimetreyi temsil etmektedir.
 kartEn = 200 * girdiBasamakDegeri  # 200 milimetreyi temsil etmektedir.
 kartBoy = 100 * girdiBasamakDegeri  # 100 milimetreyi temsil etmektedir.
-yukseklikHaritasi = [[0 for i in range(int(kartBoy / kareKenarUzunlugu))] for i in range(int(kartEn / kareKenarUzunlugu))]
+yukseklikHaritasi = [[0 for i in range(int(kartBoy / kareKenarUzunlugu))] for i in
+                     range(int(kartEn / kareKenarUzunlugu))]
 
-yukseklikHaritasi[0][0] = 2  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[1][0] = 1  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[0][1] = 3  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[1][1] = 2  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[0][0] = 5  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[1][0] = 4  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[0][1] = 6  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[1][1] = 1  # Deneme amaçlı verilen değerdir.
 
-
-def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.001):
+def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.01):
     nokta1, nokta2, nokta3, nokta4 = 0, 0, 0, 0  # Sırasıyla 00,10,01,11 noktlarını temsil etmektedir.
     by = bulunacakY
     bx = bulunacakX
@@ -44,7 +36,7 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.001):
         kareY + 1]:
         return ortaNokta  # 4 nokta eş ise tüm yüzey eştir.
 
-    if bulunacakX == ortaNoktaX and bulunacakY == ortaNoktaY: # Karenin ortası isteniliyorsa
+    if bulunacakX == ortaNoktaX and bulunacakY == ortaNoktaY:  # Karenin ortası isteniliyorsa
         return ortaNokta
 
     if bulunacakX < ortaNoktaX and bulunacakY < ortaNoktaY:  # Sol alt
@@ -87,33 +79,17 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.001):
         ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
         ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
-    elif bulunacakX == ortaNoktaX:   #X ekseninin ortasındaysa
-        return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))),by,hassasiyetDegeri)
+    elif bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
+        return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))), by, hassasiyetDegeri)
 
-    elif bulunacakY == ortaNoktaY:   #Y ekseninin ortasındaysa
+    elif bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
         return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))), hassasiyetDegeri)
 
-    """ 
-    
-    if bulunacakX % kareKenarUzunlugu == 0:  # Bu kod oluşan mantıksal hatayı giderir
-        bulunacakX = 0
-    if bulunacakY % kareKenarUzunlugu == 0:  # Bu kod oluşan mantıksal hatayı giderir
-        bulunacakY = 0
-
-
-    Mantıksal hata:Eğer karelerin kenar uzunluğuna eşit bir değer girerseniz, örneğin (5,0) bu bilgisayarda istenilen konumu vermiyor,
-    fakat verdiği konum yanlış değil. Nasıl yani? Şöyle açıklayayım: (5,0) konumu, yatayda 1 ve dikeyde 1. karenin en sağ alt konumudur.
-    Aynı zamanda da yatayda 2 ve dikeyde 1. karenin de en sol alt konumudur. Yazdığım kodun doğru şekilde çalışması için yatayda 1 ve dikeyde 1
-    konumuna göre işlem yapması gerekiyor, fakat mod alma işlemi neticesinde yatayda 2 ve dikeyde 1 konumunu alıyor. Madem bilgisayar bu 
-    konum ile işlem yapmak istiyor, biz de değerleri buna uyarlarız.(5,0) yatayda 2 ve dikeyde 1. karenin en sol altı olacağı için 5 değerini 0 yaparız
-    ve mantıksal hata ortadan kalkmış olur.    
-    
-    """
     while True:
         ortaNokta = (nokta1 + nokta2 + nokta3 + nokta4) / 4
-        #print(ortaNokta)
+        # print(ortaNokta)
         if abs(bulunacakX - ortaNoktaX) < hassasiyetDegeri and abs(bulunacakY - ortaNoktaY) < hassasiyetDegeri:
-            return ortaNokta
+            return round(ortaNokta, 5)
 
         if bulunacakX < ortaNoktaX and bulunacakY < ortaNoktaY:  # Sol alt
             nokta2 = (nokta1 + nokta2) / 2
@@ -152,24 +128,34 @@ def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.001):
             ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
         elif bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
-            return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))), by, hassasiyetDegeri)
+            return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 100))), by, hassasiyetDegeri)
 
         elif bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
-            return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))), hassasiyetDegeri)
+            return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 100))), hassasiyetDegeri)
 
 
-"""
-3. parametre işlem hassaslığıdır.
-Default değeri : 0.001
-Bu sayıyı küçülterek daha net sonuçlar alabilirsiniz.
-"""
-print("Verilen noktanın yüksekliği : " + str(yukseklikBul(1,4)))
+def testEt():
+    kbp = 50 #Karenin bölünceği parça
+    hataSayaci = 0
 
+    for i in range((kbp + 1)):
+        ilkKonum = yukseklikBul((i / (kbp / 5)), (1 / (kbp / 5)))
+        ikinciKonum = yukseklikBul((i / (kbp / 5)), (2 / (kbp / 5)))
+        baslangicFarki = abs(ikinciKonum - ilkKonum)
+        print("---------------------" + str(round(baslangicFarki,5)) + "---------------------")
 
-"""
-Bu kod ile mantıksal hata olup olmadığı kontrol edilebilir.
+        for j in range((kbp + 1)):
+            simdiki = yukseklikBul((i / (kbp / 5)), (j / (kbp / 5)))
+            sonraki = yukseklikBul((i / (kbp / 5)), ((j + 1) / (kbp / 5)))
+            simdikiFark = abs(simdiki - sonraki)
+            hassasiyet = abs(baslangicFarki - simdikiFark)
+            print(str(i / (kbp / 5)) + " - " + str(j / (kbp / 5)) + " noktalarının yüksekliği: "+ str(simdiki))
+            if hassasiyet > 0.00000001:
+                if j % (kbp / 5) == 0:
+                    hataSayaci
+                else:
+                    hataSayaci += 1
 
-for i in range(501):
-    for j in range(501):
-        print(str(i/100) + " - " + str(j/100) + "noktalarının yüksekliği: "+ str(yukseklikBul((i/100), (j/100))))
-"""
+    print("Hatalı değer: " + str(hataSayaci))
+
+testEt()
