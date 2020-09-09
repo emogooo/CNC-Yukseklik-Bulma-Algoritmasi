@@ -1,161 +1,158 @@
-girdiBasamakDegeri = 1000000000
-kareKenarUzunlugu = 5 * girdiBasamakDegeri  # 5 milimetreyi temsil etmektedir.
-kartEn = 200 * girdiBasamakDegeri  # 200 milimetreyi temsil etmektedir.
-kartBoy = 100 * girdiBasamakDegeri  # 100 milimetreyi temsil etmektedir.
-yukseklikHaritasi = [[0 for i in range(int(kartBoy / kareKenarUzunlugu))] for i in
-                     range(int(kartEn / kareKenarUzunlugu))]
+from random import randint
+kkk = 5
+yukseklikHaritasi =[]
+sayi = 2
+for i in range(sayi):
+    yukseklikHaritasi.append([i] * sayi)
+"""
+yukseklikHaritasi[0][0] = 4  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[0][1] = 10  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[1][0] = 2  # Deneme amaçlı verilen değerdir.
+yukseklikHaritasi[1][1] = 6  # Deneme amaçlı verilen değerdir.
+"""
 
-yukseklikHaritasi[0][0] = 5  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[1][0] = 4  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[0][1] = 6  # Deneme amaçlı verilen değerdir.
-yukseklikHaritasi[1][1] = 1  # Deneme amaçlı verilen değerdir.
+for i in range(sayi):
+    for j in range(sayi):
+        yukseklikHaritasi[j][i] = randint(0,500) / 100
 
-def yukseklikBul(bulunacakX, bulunacakY, hassasiyetDegeri=0.01):
-    nokta1, nokta2, nokta3, nokta4 = 0, 0, 0, 0  # Sırasıyla 00,10,01,11 noktlarını temsil etmektedir.
+def yukseklikBul(bulunacakX, bulunacakY):
+    girdiBasamakDegeri = 1000000000
+    hassasiyetDegeri = 0.01
+    kareKenarUzunlugu = kkk * girdiBasamakDegeri
+
+    if bulunacakX > ((len(yukseklikHaritasi[0]) - 1) * (kareKenarUzunlugu / girdiBasamakDegeri)) or bulunacakY > ((len(yukseklikHaritasi) - 1) * (kareKenarUzunlugu / girdiBasamakDegeri)):
+        return "Hatalı değer.. gönderilen konum matrisin sahip olduğu bir konum olmalıdır."
+
     by = bulunacakY
     bx = bulunacakX
+
     bulunacakX *= girdiBasamakDegeri
     bulunacakY *= girdiBasamakDegeri
+
+    """
     bulunacakX = float(bulunacakX)
     bulunacakY = float(bulunacakY)
+    """
     kareX = int(bulunacakX / kareKenarUzunlugu)  # X düzlemindeki (kareX + 1)'inci kare
     kareY = int(bulunacakY / kareKenarUzunlugu)  # Y düzlemindeki (kareY + 1)' inci kare
-    bulunacakX = float(bulunacakX % kareKenarUzunlugu)  # Saptanan karenin içerisindeki X konumu
-    bulunacakY = float(bulunacakY % kareKenarUzunlugu)  # Saptanan karenin içerisindeki Y konumu
+
+    bulunacakX = bulunacakX % kareKenarUzunlugu  # Saptanan karenin içerisindeki X konumu
+    bulunacakY = bulunacakY % kareKenarUzunlugu  # Saptanan karenin içerisindeki Y konumu
+
+    if bx == ((len(yukseklikHaritasi[0]) - 1) * (kareKenarUzunlugu / girdiBasamakDegeri)):
+        kareX -= 1
+        bulunacakX = kareKenarUzunlugu
+
+    if by == ((len(yukseklikHaritasi) - 1) * (kareKenarUzunlugu / girdiBasamakDegeri)):
+        kareY -= 1
+        bulunacakY = kareKenarUzunlugu
+
     ortaNoktaUstDegerX = kareKenarUzunlugu
     ortaNoktaAltDegerX = 0
     ortaNoktaUstDegerY = kareKenarUzunlugu
     ortaNoktaAltDegerY = 0
-    ortaNokta = (yukseklikHaritasi[kareX][kareY] + yukseklikHaritasi[kareX + 1][kareY] + yukseklikHaritasi[kareX][
-        kareY + 1] + yukseklikHaritasi[kareX + 1][kareY + 1]) / 4
+
+    nokta00 = yukseklikHaritasi[kareY][kareX]
+    nokta10 = yukseklikHaritasi[kareY][kareX + 1]
+    nokta01 = yukseklikHaritasi[kareY + 1][kareX]
+    nokta11 = yukseklikHaritasi[kareY + 1][kareX + 1]
+
+    ortaNokta = (nokta00 + nokta10 + nokta01 + nokta11) / 4
     ortaNoktaX = kareKenarUzunlugu / 2
     ortaNoktaY = kareKenarUzunlugu / 2
 
-    if yukseklikHaritasi[kareX][kareY] == yukseklikHaritasi[kareX + 1][kareY] and yukseklikHaritasi[kareX + 1][kareY] == \
-            yukseklikHaritasi[kareX][kareY + 1] and yukseklikHaritasi[kareX][kareY + 1] == yukseklikHaritasi[kareX + 1][
-        kareY + 1]:
-        return ortaNokta  # 4 nokta eş ise tüm yüzey eştir.
-
-    if bulunacakX == ortaNoktaX and bulunacakY == ortaNoktaY:  # Karenin ortası isteniliyorsa
+    if nokta00 == nokta10 and nokta10 == nokta01 and nokta01 == nokta11:   # 4 nokta eş ise tüm yüzey eştir.
         return ortaNokta
 
-    if bulunacakX < ortaNoktaX and bulunacakY < ortaNoktaY:  # Sol alt
-        nokta1 = yukseklikHaritasi[kareX][kareY]
-        nokta2 = (yukseklikHaritasi[kareX][kareY] + yukseklikHaritasi[kareX + 1][kareY]) / 2
-        nokta3 = (yukseklikHaritasi[kareX][kareY] + yukseklikHaritasi[kareX][kareY + 1]) / 2
-        nokta4 = ortaNokta
-        ortaNoktaUstDegerX = ortaNoktaX
-        ortaNoktaUstDegerY = ortaNoktaY
-        ortaNoktaX = (ortaNoktaX + ortaNoktaAltDegerX) / 2
-        ortaNoktaY = (ortaNoktaY + ortaNoktaAltDegerY) / 2
+    """if bulunacakX == ortaNoktaX and bulunacakY == ortaNoktaY:  # Karenin ortası isteniliyorsa
+        return ortaNokta
+    """
 
-    elif bulunacakX > ortaNoktaX and bulunacakY < ortaNoktaY:  # Sağ alt
-        nokta1 = (yukseklikHaritasi[kareX][kareY] + yukseklikHaritasi[kareX + 1][kareY]) / 2
-        nokta2 = yukseklikHaritasi[kareX + 1][kareY]
-        nokta3 = ortaNokta
-        nokta4 = (yukseklikHaritasi[kareX + 1][kareY] + yukseklikHaritasi[kareX + 1][kareY + 1]) / 2
-        ortaNoktaAltDegerX = ortaNoktaX
-        ortaNoktaUstDegerY = ortaNoktaY
-        ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
-        ortaNoktaY = (ortaNoktaY + ortaNoktaAltDegerY) / 2
-
-    elif bulunacakX < ortaNoktaX and bulunacakY > ortaNoktaY:  # Sol üst
-        nokta1 = (yukseklikHaritasi[kareX][kareY] + yukseklikHaritasi[kareX][kareY + 1]) / 2
-        nokta2 = ortaNokta
-        nokta3 = yukseklikHaritasi[kareX][kareY + 1]
-        nokta4 = (yukseklikHaritasi[kareX][kareY + 1] + yukseklikHaritasi[kareX + 1][kareY + 1]) / 2
-        ortaNoktaUstDegerX = ortaNoktaX
-        ortaNoktaAltDegerY = ortaNoktaY
-        ortaNoktaX = (ortaNoktaX + ortaNoktaAltDegerX) / 2
-        ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
-
-    elif bulunacakX > ortaNoktaX and bulunacakY > ortaNoktaY:  # Sağ üst
-        nokta1 = ortaNokta
-        nokta2 = (yukseklikHaritasi[kareX + 1][kareY] + yukseklikHaritasi[kareX + 1][kareY + 1]) / 2
-        nokta3 = (yukseklikHaritasi[kareX][kareY + 1] + yukseklikHaritasi[kareX + 1][kareY + 1]) / 2
-        nokta4 = yukseklikHaritasi[kareX + 1][kareY + 1]
-        ortaNoktaAltDegerX = ortaNoktaX
-        ortaNoktaAltDegerY = ortaNoktaY
-        ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
-        ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
-
-    elif bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
-        return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))), by, hassasiyetDegeri)
-
-    elif bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
-        return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))), hassasiyetDegeri)
+    if bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
+        return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 10))), by)
+    if bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
+        return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 10))))
 
     while True:
-        ortaNokta = (nokta1 + nokta2 + nokta3 + nokta4) / 4
-        # print(ortaNokta)
         if abs(bulunacakX - ortaNoktaX) < hassasiyetDegeri and abs(bulunacakY - ortaNoktaY) < hassasiyetDegeri:
-            return round(ortaNokta, 5)
+            return round(ortaNokta, 8)
 
         if bulunacakX < ortaNoktaX and bulunacakY < ortaNoktaY:  # Sol alt
-            nokta2 = (nokta1 + nokta2) / 2
-            nokta3 = (nokta1 + nokta3) / 2
-            nokta4 = ortaNokta
+            nokta10 = (nokta00 + nokta10) / 2
+            nokta01 = (nokta00 + nokta01) / 2
+            nokta11 = ortaNokta
             ortaNoktaUstDegerX = ortaNoktaX
             ortaNoktaUstDegerY = ortaNoktaY
             ortaNoktaX = (ortaNoktaX + ortaNoktaAltDegerX) / 2
             ortaNoktaY = (ortaNoktaY + ortaNoktaAltDegerY) / 2
 
         elif bulunacakX > ortaNoktaX and bulunacakY < ortaNoktaY:  # Sağ alt
-            nokta1 = (nokta1 + nokta2) / 2
-            nokta3 = ortaNokta
-            nokta4 = (nokta2 + nokta4) / 2
+            nokta00 = (nokta00 + nokta10) / 2
+            nokta01 = ortaNokta
+            nokta11 = (nokta10 + nokta11) / 2
             ortaNoktaAltDegerX = ortaNoktaX
             ortaNoktaUstDegerY = ortaNoktaY
             ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
             ortaNoktaY = (ortaNoktaY + ortaNoktaAltDegerY) / 2
 
         elif bulunacakX < ortaNoktaX and bulunacakY > ortaNoktaY:  # Sol üst
-            nokta1 = (nokta1 + nokta3) / 2
-            nokta2 = ortaNokta
-            nokta4 = (nokta3 + nokta4) / 2
+            nokta00 = (nokta00 + nokta01) / 2
+            nokta10 = ortaNokta
+            nokta11 = (nokta01 + nokta11) / 2
             ortaNoktaUstDegerX = ortaNoktaX
             ortaNoktaAltDegerY = ortaNoktaY
             ortaNoktaX = (ortaNoktaX + ortaNoktaAltDegerX) / 2
             ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
         elif bulunacakX > ortaNoktaX and bulunacakY > ortaNoktaY:  # Sağ üst
-            nokta1 = ortaNokta
-            nokta2 = (nokta2 + nokta4) / 2
-            nokta3 = (nokta3 + nokta4) / 2
+            nokta00 = ortaNokta
+            nokta10 = (nokta10 + nokta11) / 2
+            nokta01 = (nokta01 + nokta11) / 2
             ortaNoktaAltDegerX = ortaNoktaX
             ortaNoktaAltDegerY = ortaNoktaY
             ortaNoktaX = (ortaNoktaX + ortaNoktaUstDegerX) / 2
             ortaNoktaY = (ortaNoktaY + ortaNoktaUstDegerY) / 2
 
         elif bulunacakX == ortaNoktaX:  # X ekseninin ortasındaysa
-            return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 100))), by, hassasiyetDegeri)
+            return yukseklikBul((bx + (bx / (girdiBasamakDegeri * 100))), by)
 
         elif bulunacakY == ortaNoktaY:  # Y ekseninin ortasındaysa
-            return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 100))), hassasiyetDegeri)
+            return yukseklikBul(bx, (by + (by / (girdiBasamakDegeri * 100))))
+
+        ortaNokta = (nokta00 + nokta10 + nokta01 + nokta11) / 4
+        # print(ortaNokta)
 
 
-def testEt():
-    kbp = 50 #Karenin bölünceği parça
+
+def test():
+    basamak = 10
+    kbp = kkk * basamak #Karenin bölünceği parça
     hataSayaci = 0
-
     for i in range((kbp + 1)):
-        ilkKonum = yukseklikBul((i / (kbp / 5)), (1 / (kbp / 5)))
-        ikinciKonum = yukseklikBul((i / (kbp / 5)), (2 / (kbp / 5)))
+        ilkKonum = yukseklikBul((i / basamak), (1 / basamak))
+        ikinciKonum = yukseklikBul((i / basamak), (2 / basamak))
         baslangicFarki = abs(ikinciKonum - ilkKonum)
         print("---------------------" + str(round(baslangicFarki,5)) + "---------------------")
 
         for j in range((kbp + 1)):
-            simdiki = yukseklikBul((i / (kbp / 5)), (j / (kbp / 5)))
-            sonraki = yukseklikBul((i / (kbp / 5)), ((j + 1) / (kbp / 5)))
-            simdikiFark = abs(simdiki - sonraki)
+            if kbp == j:
+                simdiki = yukseklikBul((i / basamak), (j / basamak))
+                onceki = yukseklikBul((i / basamak), ((j - 1) / basamak))
+                simdikiFark = abs(simdiki - onceki)
+            else:
+                simdiki = yukseklikBul((i / basamak), (j / basamak))
+                sonraki = yukseklikBul((i / basamak), ((j + 1) / basamak))
+                simdikiFark = abs(simdiki - sonraki)
+
             hassasiyet = abs(baslangicFarki - simdikiFark)
-            print(str(i / (kbp / 5)) + " - " + str(j / (kbp / 5)) + " noktalarının yüksekliği: "+ str(simdiki))
-            if hassasiyet > 0.00000001:
-                if j % (kbp / 5) == 0:
-                    hataSayaci
+            print(str(i / basamak) + " - " + str(j / basamak) + " noktalarının yüksekliği: "+ str(simdiki))
+            if hassasiyet > 0.00001:
+                if j % basamak == 0:
+                    continue
                 else:
                     hataSayaci += 1
 
     print("Hatalı değer: " + str(hataSayaci))
 
-testEt()
+test()
+#print(yukseklikBul(5,5))
